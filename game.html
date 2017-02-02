@@ -1,0 +1,150 @@
+<html>
+    <head>
+        <title></title>
+        <style type="text/css">
+
+        body {
+            padding: 0;
+            margin: 0;
+            font-family: monospace;
+        }
+
+        table td {
+            text-align: center;
+            padding: 25px;
+        }
+        .player {
+            background-color: lightgray;
+            padding: 25px;
+        }
+        .player.active {
+            background-color: lightgreen;
+        }
+
+        #board {
+            width: 610px;
+            margin: auto;
+        }
+        .square {
+            width: 160px;
+            height: 160px;
+            float: left;
+            border: 5px solid black;
+            font-size: 100px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+        #s1,#s3,#s7,#s9 {
+            border: none;
+        }
+        #s2, #s8 {
+            border-top: none;
+            border-bottom: none;
+        }
+        #s4, #s6 {
+            border-left: none;
+            border-right: none;
+        }
+
+        </style>
+    </head>
+    <body>
+
+        <div id="board">
+            <table width="100%" style="height:200px;">
+                <tbody>
+                    <tr>
+                        <td><div class="player active">Player 1 (x)</div></td>
+                        <td><div class="player">Player 2 (o)</div></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="square" id="s1"></div>
+            <div class="square" id="s2"></div>
+            <div class="square" id="s3"></div>
+            <div class="square" id="s4"></div>
+            <div class="square" id="s5"></div>
+            <div class="square" id="s6"></div>
+            <div class="square" id="s7"></div>
+            <div class="square" id="s8"></div>
+            <div class="square" id="s9"></div>
+        </div>
+
+        <script type="text/javascript">
+
+        var win = [
+            [0,1,2],
+            [0,3,6],
+            [0,4,8],
+            [1,4,7],
+            [2,3,6],
+            [2,5,8],
+            [3,4,5],
+            [6,7,8]
+        ];
+
+        var firstPlayer = true;
+        var gameOver = false;
+
+        var squares = document.getElementsByClassName('square');
+
+        function onSquareClick(e) {
+            var players = document.getElementsByClassName('player');
+            var marker;
+            if (firstPlayer) {
+                players[0].className = 'player active';
+                players[1].className = 'player';
+                marker = 'x';
+            } else {
+                players[0].className = 'player';
+                players[1].className = 'player active';
+                marker = 'o';
+            }
+            firstPlayer = !firstPlayer;
+            e.currentTarget.innerHTML = marker;
+            if (isWinner()) {
+                gameOver = true;
+            }
+        }
+
+        function isWinner() {
+            var x = [];
+            var o = [];
+            var i, j;
+            for (var i=0; i<squares.length; i++) {
+                if (squares[i].innerHTML == 'x') {
+                    x.push(i);
+                } else if (squares[i].innerHTML == 'o') {
+                    o.push(i);
+                }
+            }
+            if (hasWon(x)) {
+                return 'x';
+            }
+            if (hasWon(o)) {
+                return 'y';
+            }
+        }
+
+        function hasWon(moves) {
+            for (i=0; i<win.length; i++) {
+                for (j=0; j<win[i].length; j++) {
+                    if (moves.indexOf(win[i][j]) < 0) {
+                        break;
+                    }
+                }
+                if (j == win[i].length) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        for (var i=0; i<squares.length; i++) {
+            squares[i].onclick = onSquareClick;
+        }
+
+        </script>
+    </body>
+</html>
